@@ -3,6 +3,7 @@ const app = express();
 const mongoose = require('mongoose');
 require('dotenv').config();
 const userRoute = require('./routes/user');
+const authRoute = require('./routes/auth');
 
 mongoose
    .connect(process.env.MONGO_URL)
@@ -12,6 +13,8 @@ mongoose
 //To send or post json to our database
 app.use(express.json());
 
+//Auth Routes
+app.use('/api/auth', authRoute);
 //Users Routes
 app.use('/api/users', userRoute);
 
