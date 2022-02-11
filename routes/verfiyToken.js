@@ -10,10 +10,10 @@ const verifyToken = (req, res, next) => {
       jwt.verify(token, process.env.JWT, (err, user) => {
          if (err) res.status(403).json('Token not authorized');
 
-         //If everything is authenticated assign 'req.user' to 'user' params
+         //If everything is authenticated assign 'req.user' to 'user' params above
          req.user = user;
 
-         //Go to our router next destination
+         //Go to our router - next destination
          next();
       });
    } else {
@@ -31,4 +31,19 @@ const verifyTokenAndAuthorization = (req, res, next) => {
    });
 };
 
-module.exports = { verifyToken, verifyTokenAndAuthorization };
+//Verify if its Admin which has access to orders and products
+const verifyTokenAndAdmin = (req, res, next) => {
+   verifyToken(req, res, () => {
+      if (req.user.isAdmin) {
+         next();
+      } else {
+         res.status(403).json("You're not allowed");
+      }
+   });
+};
+
+module.exports = {
+   verifyToken,
+   verifyTokenAndAuthorization,
+   verifyTokenAndAdmin,
+};
