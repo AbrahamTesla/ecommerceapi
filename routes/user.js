@@ -57,4 +57,51 @@ router.get('/find/:id', verifyTokenAndAdmin, async (req, res) => {
    }
 });
 
+//@Find all Users  GET method
+router.get('/', verifyTokenAndAdmin, async (req, res) => {
+   //For querying - which is 'new' the name of our query
+   const query = req.query.new;
+   try {
+      //If there's a 'query' find 5 users and sort it. Else, if there's no query return all users
+      const users = query
+         ? await User.find().sort({ _id: -1 }).limit(5)
+         : await User.find();
+      res.status(200).json(users);
+   } catch (error) {
+      res.status(500).json(error);
+   }
+});
+
+//@Get Users stats returning total number of users per month limit to current year only.   GET METHOD
+
+router.get('/stats', verifyTokenAndAdmin, async (req, res) => {
+   const date = new Date();
+   //Get last year
+   const lastYear = new Date(date.setFullYear(date.getFullYear() - 1));
+
+   try {
+      //Using mongoose aggregate to group items together
+      const data = await User.aggregate([
+         //match my conditon
+         { $match: { createAt: { $gte: lastYear } } },
+         {
+            $project: {
+               //creating a variable 'month' by taking the month from the mongoDB createAt
+               month: { $month: '$createAt' },
+            },
+         },
+         {
+            //group by '_id' unique id by month and get total user number which the sume of all registered user by 1
+            $group: {
+               _id: '$month',
+               total: { $sum: 1 },
+            },
+         },
+      ]);
+      res.status(200).json(data);
+   } catch (error) {
+      res.status(500).json(error);
+   }
+});
+
 module.exports = router;
