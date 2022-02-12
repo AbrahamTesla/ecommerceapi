@@ -82,12 +82,12 @@ router.get('/stats', verifyTokenAndAdmin, async (req, res) => {
    try {
       //Using mongoose aggregate to group items together
       const data = await User.aggregate([
-         //match my conditon
-         { $match: { createAt: { $gte: lastYear } } },
+         //match my conditon greater than last year but less than today
+         { $match: { createdAt: { $gte: lastYear } } },
          {
             $project: {
                //creating a variable 'month' by taking the month from the mongoDB createAt
-               month: { $month: '$createAt' },
+               month: { $month: '$createdAt' },
             },
          },
          {
