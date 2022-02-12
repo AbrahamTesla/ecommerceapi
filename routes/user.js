@@ -91,7 +91,7 @@ router.get('/stats', verifyTokenAndAdmin, async (req, res) => {
             },
          },
          {
-            //group by '_id' unique id by month and get total user number which the sume of all registered user by 1
+            //group by '_id' unique id by month (e.g 9 = sept, 8 = Aug) and get total user number which the sume of all registered user by 1
             $group: {
                _id: '$month',
                total: { $sum: 1 },
