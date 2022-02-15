@@ -4,7 +4,7 @@ const {
    verifyToken,
    verifyTokenAndAuthorization,
    verifyTokenAndAdmin,
-} = require('./verfiyToken');
+} = require('./verifyToken');
 
 //@Create CART  POST method
 

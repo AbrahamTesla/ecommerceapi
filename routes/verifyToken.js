@@ -1,14 +1,14 @@
 const jwt = require('jsonwebtoken');
 
 const verifyToken = (req, res, next) => {
-   const autHeader = req.headers.token;
+   const authHeader = req.headers.token;
 
-   if (autHeader) {
+   if (authHeader) {
       //Space between Bearer and the token by taking the second array [1] which is our token
-      const token = autHeader.split(' ')[1];
+      const token = authHeader.split(' ')[1];
       //Used 'verify' function to validate token.  If not verified, return the error.
       jwt.verify(token, process.env.JWT, (err, user) => {
-         if (err) res.status(403).json('Token not authorized');
+         if (err) res.status(403).json('Token is not valid');
 
          //If everything is authenticated assign 'req.user' to 'user' params above
          req.user = user;
