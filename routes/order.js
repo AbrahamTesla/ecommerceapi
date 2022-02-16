@@ -85,7 +85,8 @@ router.get('/income', verifyTokenAndAdmin, async (req, res) => {
                month: { $month: '$createdAt' },
                sales: '$amount',
             },
-
+         },
+         {
             $group: {
                _id: '$month',
                total: { $sum: '$sales' },
@@ -95,6 +96,7 @@ router.get('/income', verifyTokenAndAdmin, async (req, res) => {
       res.status(200).json(income);
    } catch (error) {
       res.status(500).json(error);
+      console.log(error);
    }
 });
 
